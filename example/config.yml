@@ -1,0 +1,8 @@
+base: src
+dist: dist
+src: src/1/sass
+vendor:
+  - "**/vendor/**/*"
+data:
+  foo: FOO
+  bar: BAR

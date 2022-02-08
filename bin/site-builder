@@ -1,0 +1,3 @@
+#!/bin/sh
+BASE_DIR=$(cd $(dirname $(dirname $0)); pwd)
+node $BASE_DIR/lib/index.mjs $*

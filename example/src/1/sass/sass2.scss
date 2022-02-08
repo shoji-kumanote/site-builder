@@ -1,0 +1,31 @@
+@use "../sassLib/sassLib2";
+
+.sass2 {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+@media not screen and (max-width: 599px) {
+  .sass2::before {
+    content: ">= 600";
+  }
+}
+
+@media screen and (max-width: 599px) {
+  .sass2::before {
+    content: "< 600";
+  }
+}
+
+@media not screen and (max-width: 599px) {
+  .sass2 {
+    font-size: 12px;
+  }
+}
+
+@media screen and (max-width: 599px) {
+  .sass2::before {
+    font-size: 10px;
+  }
+}

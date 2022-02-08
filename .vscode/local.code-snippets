@@ -1,0 +1,10 @@
+{
+  "jsdoc type": {
+    "body": "/** タイプ: $0 */",
+    "prefix": "/type"
+  },
+  "jsdoc class": {
+    "body": "/** クラス: $0 */",
+    "prefix": "/class"
+  }
+}
