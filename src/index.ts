@@ -46,15 +46,15 @@ const main = async (): Promise<void> => {
 
   switch (argv._[0]) {
     case "info":
-      info(context);
+      await info(context);
       break;
 
     case "clean":
-      clean(context);
+      await clean(context);
       break;
 
     case "build":
-      build(context);
+      await build(context);
       break;
 
     default:
