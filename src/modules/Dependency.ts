@@ -1,3 +1,5 @@
+import { Logger } from "./Logger";
+
 type DepsMap = Map<string, Set<string>>;
 
 /**
@@ -87,12 +89,16 @@ export class Dependency {
   }
 
   /** 依存関係のデバッグ出力 */
-  dump(): void {
+  dump(logger: Logger): void {
+    logger.banner("dependency");
     for (const [a, b] of this.#map.entries()) {
-      console.debug(a);
+      logger.fileSuccess("", a);
+      logger.begin();
       for (const x of b) {
-        console.debug(" ", x);
+        logger.fileSuccess("", x);
       }
+      logger.end();
+      logger.info();
     }
   }
 }

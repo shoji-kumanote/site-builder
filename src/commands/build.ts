@@ -31,5 +31,5 @@ export const build: Command = async (context) => {
     }
   }
 
-  context.dependency.dump();
+  context.dependency.dump(context.logger);
 };

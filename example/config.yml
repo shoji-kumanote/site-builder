@@ -1,6 +1,6 @@
 base: src
 dist: dist
-src: src/1/sass
+src: src/1
 vendor:
   - "**/vendor/**/*"
 data:

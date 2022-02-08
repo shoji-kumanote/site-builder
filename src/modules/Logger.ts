@@ -187,13 +187,12 @@ export class Logger {
     error: unknown = undefined
   ): void {
     const { name, relPath } = this.getFileInfo(filePath);
+    const formattedLabel =
+      label.length === 0 ? "" : `[${applyColor(label, color)}] `;
     const message = this.getErrorMessage(error, color);
 
     this.info(
-      `[${applyColor(label, color)}] ${applyColor(
-        `${name}: `,
-        "dim"
-      )}${relPath}${message}`
+      `${formattedLabel}${applyColor(`${name}: `, "dim")}${relPath}${message}`
     );
   }
 
