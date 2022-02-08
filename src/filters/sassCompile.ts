@@ -14,9 +14,7 @@ export const sassCompile: Filter = async (transit, context) => {
 
   context.dependency.add(
     transit.srcFilePath,
-    ...result.loadedUrls.map((x) =>
-      path.relative(context.config.base, x.pathname)
-    )
+    ...result.loadedUrls.map((x) => x.pathname)
   );
 
   const next = transit.update(
