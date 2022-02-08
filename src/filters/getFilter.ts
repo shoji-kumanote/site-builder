@@ -1,5 +1,5 @@
-import { Filter } from "../modules/Filter";
 import { FilterType, FILTER_TYPES } from "../modules/FilterType";
+import { Filter } from "../types/Filter";
 
 /**
  * フィルタ種別に対応するフィルタ関数取得

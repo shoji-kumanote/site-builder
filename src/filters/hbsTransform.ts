@@ -2,8 +2,8 @@ import fs from "fs";
 import path from "path";
 
 import { Context } from "../modules/Context";
-import { Filter } from "../modules/Filter";
 import { Transit } from "../modules/Transit";
+import { Filter } from "../types/Filter";
 
 /** タイプ: Handlebarsに渡す共通のデータ */
 type HbsData = {

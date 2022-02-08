@@ -1,5 +1,5 @@
-import { Command } from "../modules/Command";
-import { WorkFlow } from "../modules/WorkFlow";
+import { Command } from "../types/Command";
+import { WorkFlow } from "../types/WorkFlow";
 
 /** info コマンド */
 export const info: Command = async (context) => {

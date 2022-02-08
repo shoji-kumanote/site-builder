@@ -1,12 +1,12 @@
 import path from "path";
 
+import { WorkFlow } from "../types/WorkFlow";
 import { getCssWorkFlows } from "../util/getCssWorkFlows";
 import { getJsWorkFlows } from "../util/getJsWorkFlows";
 
 import { Config } from "./Config";
 import { ENTRY_TYPES, EntryType, getEntryType } from "./EntryType";
 import { FilterType, FILTER_TYPES } from "./FilterType";
-import { WorkFlow } from "./WorkFlow";
 
 /** クラス: エントリ */
 export class Entry {

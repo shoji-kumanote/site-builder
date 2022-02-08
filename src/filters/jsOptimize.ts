@@ -1,7 +1,7 @@
 import { BabelFileResult, TransformOptions } from "@babel/core";
 
-import { Filter } from "../modules/Filter";
 import { Transit } from "../modules/Transit";
+import { Filter } from "../types/Filter";
 
 /**
  * babelによる js transpile

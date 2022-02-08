@@ -1,7 +1,7 @@
 import path from "path";
 import url from "url";
 
-import { Filter } from "../modules/Filter";
+import { Filter } from "../types/Filter";
 
 /** css minify フィルタ */
 export const cssMinify: Filter = async (transit) => {

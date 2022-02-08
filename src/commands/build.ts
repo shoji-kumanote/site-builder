@@ -1,7 +1,7 @@
 import path from "path";
 
-import { Command } from "../modules/Command";
 import { Transit } from "../modules/Transit";
+import { Command } from "../types/Command";
 import { applyWorkFlow } from "../util/applyWorkFlow";
 
 /** build コマンド */

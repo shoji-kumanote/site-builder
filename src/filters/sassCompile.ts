@@ -1,6 +1,6 @@
 import path from "path";
 
-import { Filter } from "../modules/Filter";
+import { Filter } from "../types/Filter";
 
 /** sass compile フィルタ */
 export const sassCompile: Filter = async (transit, context) => {

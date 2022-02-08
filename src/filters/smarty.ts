@@ -1,4 +1,4 @@
-import { Filter } from "../modules/Filter";
+import { Filter } from "../types/Filter";
 
 /** smarty フィルタ */
 export const smarty: Filter = async (transit) =>

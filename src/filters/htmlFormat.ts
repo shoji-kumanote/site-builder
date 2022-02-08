@@ -1,4 +1,4 @@
-import { Filter } from "../modules/Filter";
+import { Filter } from "../types/Filter";
 import { addDocType } from "../util/addDocType";
 import { getDefaultPrettierConfig } from "../util/getDefaultPrettierConfig";
 

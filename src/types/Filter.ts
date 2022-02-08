@@ -1,5 +1,5 @@
-import { Context } from "./Context";
-import { Transit } from "./Transit";
+import { Context } from "../modules/Context";
+import { Transit } from "../modules/Transit";
 
 /**
  * タイプ: フィルタ

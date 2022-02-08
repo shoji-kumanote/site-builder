@@ -1,9 +1,10 @@
 import path from "path";
 
-import { CliOption } from "./CliOption";
+import { CliOption } from "../types/CliOption";
+import { PageData } from "../types/PageData";
+
 import { ConfigFileData, loadConfigFile, mergeConfigFile } from "./ConfigFile";
 import { FilterType } from "./FilterType";
-import { PageData } from "./PageData";
 
 /** タイプ: 設定データ */
 type ConfigData = Omit<CliOption & ConfigFileData, "data">;

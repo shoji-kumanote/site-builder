@@ -3,7 +3,7 @@ import path from "path";
 import { getFilter } from "../filters/getFilter";
 import { Context } from "../modules/Context";
 import { Transit } from "../modules/Transit";
-import { WorkFlow } from "../modules/WorkFlow";
+import { WorkFlow } from "../types/WorkFlow";
 
 import { annotateSourceMap } from "./annotateSourceMap";
 

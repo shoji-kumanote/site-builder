@@ -1,7 +1,7 @@
 import { execFile } from "child_process";
 import { promisify } from "util";
 
-import { Filter } from "../modules/Filter";
+import { Filter } from "../types/Filter";
 
 /** png optimize フィルタ */
 export const pngOptimize: Filter = async (transit, context) => {

@@ -6,6 +6,7 @@
   "license": "MIT",
   "private": true,
   "scripts": {
+    "ts-check": "tsc --noEmit",
     "build": "node esbuild.config.mjs",
     "watch": "node esbuild.config.mjs --watch"
   },

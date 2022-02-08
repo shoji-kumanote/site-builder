@@ -1,4 +1,4 @@
-import { Filter } from "../modules/Filter";
+import { Filter } from "../types/Filter";
 
 /** css optimize フィルタ */
 export const cssOptimize: Filter = async (transit) => {

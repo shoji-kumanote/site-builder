@@ -1,7 +1,7 @@
 import { execFile } from "child_process";
 import { promisify } from "util";
 
-import { Filter } from "../modules/Filter";
+import { Filter } from "../types/Filter";
 
 /** GIF optimize フィルタ */
 export const gifOptimize: Filter = async (transit, context) => {

@@ -1,5 +1,5 @@
 import { FILTER_TYPES } from "../modules/FilterType";
-import { WorkFlow } from "../modules/WorkFlow";
+import { WorkFlow } from "../types/WorkFlow";
 
 /**
  * JavaScript向けのワークフロー作成

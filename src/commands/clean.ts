@@ -1,6 +1,6 @@
 import path from "path";
 
-import { Command } from "../modules/Command";
+import { Command } from "../types/Command";
 
 /** clean コマンド */
 export const clean: Command = async (context) => {

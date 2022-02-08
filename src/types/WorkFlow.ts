@@ -1,4 +1,4 @@
-import { FilterType } from "./FilterType";
+import { FilterType } from "../modules/FilterType";
 
 /** タイプ: ワークフロー */
 export type WorkFlow = {

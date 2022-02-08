@@ -1,4 +1,4 @@
-import { Filter } from "../modules/Filter";
+import { Filter } from "../types/Filter";
 import { getEsBuildResult } from "../util/getEsBuildResult";
 
 /** ts bundle フィルタ */

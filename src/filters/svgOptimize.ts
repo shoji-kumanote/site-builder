@@ -1,6 +1,6 @@
 import { RemoveViewBoxPlugin, RemoveAttrsPlugin, OptimizeOptions } from "svgo";
 
-import { Filter } from "../modules/Filter";
+import { Filter } from "../types/Filter";
 
 /** viewBoxを削除しない設定 */
 const removeViewBox: RemoveViewBoxPlugin = {

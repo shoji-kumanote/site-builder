@@ -1,6 +1,6 @@
 import { MinifyOutput } from "terser";
 
-import { Filter } from "../modules/Filter";
+import { Filter } from "../types/Filter";
 
 /**
  * terser の結果からソースマップを得る

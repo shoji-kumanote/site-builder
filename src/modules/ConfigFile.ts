@@ -2,11 +2,11 @@ import fs from "fs";
 
 import jsYaml from "js-yaml";
 
+import { PageData } from "../types/PageData";
 import { getStringArray } from "../util/getStringArray";
 import { mergeArray } from "../util/mergeArray";
 
 import { FilterType, FILTER_TYPES, getFilterType } from "./FilterType";
-import { PageData } from "./PageData";
 
 /** タイプ: 設定ファイルデータ */
 export type ConfigFileData = {
