@@ -2,8 +2,9 @@
   "files.trimFinalNewlines": true,
   "files.insertFinalNewline": true,
   "files.trimTrailingWhitespace": true,
-  "editor.trimAutoWhitespace": true,
+  "files.eol": "\n",
 
+  "editor.trimAutoWhitespace": true,
   "editor.formatOnSave": true,
 
   "typescript.validate.enable": true,
