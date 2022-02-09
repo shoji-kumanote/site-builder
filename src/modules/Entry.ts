@@ -336,14 +336,22 @@ export class Entry {
     );
   }
 
-  /** すべての出力ファイルパス取得 */
-  getDistPaths(): string[] {
+  /**
+   * すべての出力ファイルパス取得
+   *
+   * @param includeSourceMap - ソースマップを含む
+   */
+  getDistPaths(includeSourceMap = false): string[] {
     const distPaths: string[] = [];
 
     const walk = (workFlowList: WorkFlow[]): void => {
       for (const workFlow of workFlowList) {
         if (workFlow.next.length === 0) {
           distPaths.push(workFlow.distPath);
+
+          if (includeSourceMap && workFlow.sourceMap) {
+            distPaths.push(`${workFlow.distPath}.map`);
+          }
         } else {
           walk(workFlow.next);
         }

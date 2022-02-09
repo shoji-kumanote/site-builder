@@ -11,7 +11,10 @@ export const clean: Command = async (context) => {
   const entries = await context.getEntries();
 
   const files = entries
-    .reduce((prev: string[], x): string[] => [...prev, ...x.getDistPaths()], [])
+    .reduce(
+      (prev: string[], x): string[] => [...prev, ...x.getDistPaths(true)],
+      []
+    )
     .map((x) => path.resolve(config.dist, x));
 
   await Promise.all(files.map((x) => context.file.unlink(x)));
