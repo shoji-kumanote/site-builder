@@ -103,10 +103,26 @@ const create = async (
   };
 
   hbs.registerHelper(
+    "_",
+    function includeHelper(this: HbsData, file, hbsContext) {
+      return new handlebars.default.SafeString(
+        apply(file, this, hbsContext, true)
+      );
+    }
+  );
+  hbs.registerHelper(
     "include",
     function includeHelper(this: HbsData, file, hbsContext) {
       return new handlebars.default.SafeString(
         apply(file, this, hbsContext, true)
+      );
+    }
+  );
+  hbs.registerHelper(
+    "$",
+    function insertHelper(this: HbsData, file, hbsContext) {
+      return new handlebars.default.SafeString(
+        apply(file, this, hbsContext, false)
       );
     }
   );
