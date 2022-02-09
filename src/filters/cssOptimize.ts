@@ -1,7 +1,9 @@
 import { Filter } from "../types/Filter";
 
 /** css optimize フィルタ */
-export const cssOptimize: Filter = async (transit) => {
+export const cssOptimize: Filter = async (transit, context) => {
+  if (context.config.dev) return transit;
+
   const postcss = await import("postcss");
   const autoprefixer = await import("autoprefixer");
   const mqpacker = await import("css-mqpacker");

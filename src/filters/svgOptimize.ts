@@ -23,6 +23,8 @@ const options: OptimizeOptions = {
 
 /** svg optimize フィルタ */
 export const svgOptimize: Filter = async (transit, context) => {
+  if (context.config.dev) return transit;
+
   const svgo = await import("svgo");
 
   const result = svgo.optimize(transit.data, options);

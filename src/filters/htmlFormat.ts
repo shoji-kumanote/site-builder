@@ -3,7 +3,9 @@ import { addDocType } from "../util/addDocType";
 import { getDefaultPrettierConfig } from "../util/getDefaultPrettierConfig";
 
 /** html format フィルタ */
-export const htmlFormat: Filter = async (transit) => {
+export const htmlFormat: Filter = async (transit, context) => {
+  if (context.config.dev) return transit;
+
   const prettier = await import("prettier");
   const config =
     (await prettier.default.resolveConfig(transit.srcFilePath)) ??

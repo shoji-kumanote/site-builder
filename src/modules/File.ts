@@ -141,4 +141,27 @@ export class File {
     }
     this.logger.fileSuccess("write", filePath);
   }
+
+  /**
+   * ファイルコピー
+   *
+   * @param srcFilePath - コピー元
+   * @param distFilePath - コピー先
+   */
+  async copy(srcFilePath: string, distFilePath?: string): Promise<void> {
+    if (distFilePath === undefined) return;
+
+    await this.prepareWrite(distFilePath);
+
+    if (!this.dryRun) {
+      try {
+        await fs.promises.copyFile(srcFilePath, distFilePath);
+      } catch (e) {
+        this.logger.fileFailure("copy", distFilePath, e);
+
+        return;
+      }
+    }
+    this.logger.fileSuccess("copy", distFilePath);
+  }
 }

@@ -5,6 +5,12 @@ import { Filter } from "../types/Filter";
 
 /** jpeg optimize フィルタ */
 export const jpegOptimize: Filter = async (transit, context) => {
+  if (context.config.dev) {
+    await context.file.copy(transit.srcFilePath, transit.distFilePath);
+
+    return transit;
+  }
+
   const jpegTran = await import("jpegtran-bin");
 
   if (transit.distFilePath === undefined) {

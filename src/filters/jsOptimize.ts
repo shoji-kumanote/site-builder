@@ -39,7 +39,9 @@ const transpile = async (transit: Transit): Promise<BabelFileResult> => {
 };
 
 /** js optimize フィルタ */
-export const jsOptimize: Filter = async (transit) => {
+export const jsOptimize: Filter = async (transit, context) => {
+  if (context.config.dev) return transit;
+
   const result = await transpile(transit);
 
   if (result.map === null || result.map === undefined) {

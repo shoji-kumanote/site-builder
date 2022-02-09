@@ -4,7 +4,9 @@ import url from "url";
 import { Filter } from "../types/Filter";
 
 /** css minify フィルタ */
-export const cssMinify: Filter = async (transit) => {
+export const cssMinify: Filter = async (transit, context) => {
+  if (context.config.dev) return transit;
+
   const postcss = await import("postcss");
   const csso = await import("postcss-csso");
 

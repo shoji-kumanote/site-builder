@@ -17,7 +17,9 @@ const getSourceMap = (result: MinifyOutput): string | undefined => {
 };
 
 /** js minify フィルタ */
-export const jsMinify: Filter = async (transit) => {
+export const jsMinify: Filter = async (transit, context) => {
+  if (context.config.dev) return transit;
+
   const terser = await import("terser");
 
   const result = await terser.minify(transit.data, {
