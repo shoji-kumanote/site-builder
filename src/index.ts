@@ -4,6 +4,7 @@ import { hideBin } from "yargs/helpers";
 import { build } from "./commands/build";
 import { clean } from "./commands/clean";
 import { info } from "./commands/info";
+import { watch } from "./commands/watch";
 import { Config } from "./modules/Config";
 import { Context } from "./modules/Context";
 
@@ -55,6 +56,10 @@ const main = async (): Promise<void> => {
 
     case "build":
       await build(context);
+      break;
+
+    case "watch":
+      await watch(context);
       break;
 
     default:

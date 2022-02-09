@@ -1,4 +1,5 @@
 import { globby } from "globby";
+import micromatch from "micromatch";
 
 import { Config } from "./Config";
 import { Dependency } from "./Dependency";
@@ -9,7 +10,8 @@ import { Logger } from "./Logger";
 /** 実行時コンテキスト */
 export class Context {
   /** 設定 */
-  readonly config: Config;
+  #config: Config;
+
   /** ロガー */
   readonly logger: Logger;
   /** ファイル操作 */
@@ -23,19 +25,41 @@ export class Context {
    * @param config - 設定
    */
   constructor(config: Config) {
-    this.config = config;
+    this.#config = config;
     this.logger = new Logger(config);
     this.file = new File(this.logger, config.dryRun);
     this.dependency = new Dependency();
   }
 
-  /** 対象のエントリ取得 */
+  get config(): Config {
+    return this.#config;
+  }
+
+  /** 設定ファイルの再読み込み */
+  async reloadConfig(): Promise<void> {
+    this.#config = await Config.create({
+      config: this.#config.config,
+      dev: this.#config.dev,
+      dryRun: this.#config.dryRun,
+    });
+  }
+
+  /** 全ソースファイルのエントリ取得 */
   async getEntries(): Promise<Entry[]> {
     const filePaths = await globby(
       [...this.config.src, ...this.config.ignore.map((x) => `!${x}`)],
       { onlyFiles: true }
     );
 
-    return filePaths.map((x) => new Entry(this.config, x));
+    return filePaths.map((x) => new Entry(this.#config, x));
+  }
+
+  /** 指定ファイルのエントリ取得 */
+  getEntry(filePath: string): Entry | undefined {
+    if (micromatch([filePath], this.config.ignore).length > 0) {
+      return undefined;
+    }
+
+    return new Entry(this.#config, filePath);
   }
 }

@@ -6,6 +6,7 @@ import path from "path";
 
 // eslint-disable-next-line import/no-unresolved
 import chalk, { Color, Modifiers } from "chalk"; // ???
+import { format } from "date-fns";
 import terminalSize from "term-size";
 
 import { Config } from "./Config";
@@ -45,6 +46,9 @@ const applyColor = (value: string, ...colors: LoggerColor[]): string => {
 
 /** クラス: ロガー */
 export class Logger {
+  /** idle検出タイマー */
+  #idleTimer: undefined | NodeJS.Timeout;
+
   /** indent */
   #indent: string;
 
@@ -95,6 +99,15 @@ export class Logger {
       applyColor("_".repeat(width() - title.length - 4), colors, "inverse")
     );
     console.info("");
+  }
+
+  idle(timeoutMs = 150): void {
+    if (this.#idleTimer !== undefined) clearTimeout(this.#idleTimer);
+
+    this.#idleTimer = setTimeout(() => {
+      this.banner(format(new Date(), "HH:mm:ss"), "gray");
+      console.info("");
+    }, timeoutMs);
   }
 
   /**
@@ -205,6 +218,17 @@ export class Logger {
    */
   fileSuccess(label: string, filePath: string, error?: unknown): void {
     this.file(label, ["green"], filePath, error);
+  }
+
+  /**
+   * ファイルについての情報ログ出力
+   *
+   * @param label - ラベル
+   * @param filePath - ファイルパス
+   * @param error - エラーオブジェクトなど
+   */
+  fileNotice(label: string, filePath: string, error?: unknown): void {
+    this.file(label, ["cyan"], filePath, error);
   }
 
   /**

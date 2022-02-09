@@ -1,8 +1,5 @@
-import path from "path";
-
-import { Transit } from "../modules/Transit";
 import { Command } from "../types/Command";
-import { applyWorkFlow } from "../util/applyWorkFlow";
+import { buildEntry } from "../util/buildEntry";
 
 /** build コマンド */
 export const build: Command = async (context) => {
@@ -13,22 +10,8 @@ export const build: Command = async (context) => {
   const entries = await context.getEntries();
 
   for (const entry of entries) {
-    const distPath = entry.getPrimaryDistPath();
     // eslint-disable-next-line no-await-in-loop
-    const transit = await Transit.create(
-      entry.entryPath,
-      entry.srcFilePath,
-      distPath === undefined
-        ? undefined
-        : path.resolve(context.config.dist, distPath)
-    );
-
-    logger.entry(entry);
-
-    for (const workFlow of entry.getWorkFlows()) {
-      // eslint-disable-next-line no-await-in-loop
-      await applyWorkFlow(workFlow, transit, context);
-    }
+    await buildEntry(context, entry);
   }
 
   context.dependency.dump(context.logger);
