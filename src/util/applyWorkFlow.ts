@@ -1,11 +1,11 @@
 import path from "path";
 
-import { getFilter } from "../filters/getFilter";
 import { Context } from "../modules/Context";
 import { Transit } from "../modules/Transit";
 import { WorkFlow } from "../types/WorkFlow";
 
 import { annotateSourceMap } from "./annotateSourceMap";
+import { getFilter } from "./getFilter";
 
 /**
  * ワークフローを実行
