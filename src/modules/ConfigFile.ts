@@ -100,15 +100,23 @@ export const loadConfigFile = async (
     }
   }
 
+  const base = path.resolve(configBaseDir, configFileData.base);
+
   return {
-    base: path.resolve(configBaseDir, configFileData.base),
+    base,
     dist: path.resolve(configBaseDir, configFileData.dist),
-    src: getStringArray(configFileData.src).map((x) =>
-      path.resolve(configBaseDir, x)
-    ),
-    vendor: getStringArray(configFileData.vendor).map((x) =>
-      path.resolve(configBaseDir, x)
-    ),
+    src:
+      "src" in configFileData
+        ? getStringArray(configFileData.src).map((x) =>
+            path.resolve(configBaseDir, x)
+          )
+        : [base],
+    vendor:
+      "vendor" in configFileData
+        ? getStringArray(configFileData.vendor).map((x) =>
+            path.resolve(configBaseDir, x)
+          )
+        : ["**/vendor/**/*"],
     ignore: getStringArray(configFileData.ignore).map((x) =>
       path.resolve(configBaseDir, x)
     ),
