@@ -121,7 +121,7 @@ export const loadConfigFile = async (
       path.resolve(configBaseDir, x)
     ),
     disabled,
-    data: configFileData.data,
+    data: configFileData.data ?? {},
   };
 };
 
