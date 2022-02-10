@@ -1,0 +1,10 @@
+base: src
+dist: out
+src:
+  - src/1
+  - src/2
+vendor:
+  - "**/vendor/**/*"
+data:
+  foo: FOO
+  bar: BAR
