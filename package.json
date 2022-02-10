@@ -2,7 +2,7 @@
   "name": "@kumanote/site-builder",
   "version": "1.0.1",
   "main": "lib/index.mjs",
-  "typings": "lib/type/index.d.ts",
+  "typings": "lib/types/index.d.ts",
   "license": "MIT",
   "repository": "git@github.com:shoji-kumanote/site-builder.git",
   "author": "shoji-kumanote <h-shoji@kumanote.info>",
