@@ -8,7 +8,7 @@ import { Filter } from "../types/Filter";
 /** タイプ: Handlebarsに渡す共通のデータ */
 type HbsData = {
   /** 対象となっているファイル */
-  __file__: string;
+  __FILE__: string;
 };
 
 /** タイプ: Handlebarsのコンテキスト */
@@ -88,7 +88,7 @@ const create = async (
     include: boolean
   ): string => {
     // eslint-disable-next-line no-underscore-dangle
-    const baseFilePath = hbsContext.data.root.__file__;
+    const baseFilePath = hbsContext.data.root.__FILE__;
     const includeFilePath = findFile(path.dirname(baseFilePath), file);
 
     context.dependency.add(transit.srcFilePath, includeFilePath);
@@ -99,7 +99,10 @@ const create = async (
 
     const compiled = hbs.compile(src);
 
-    return compiled(currentData);
+    return compiled({
+      ...currentData,
+      __FILE__: includeFilePath,
+    });
   };
 
   hbs.registerHelper(
@@ -146,7 +149,7 @@ export const hbsTransform: Filter = async (transit, context) => {
     const stamp = `${Date.now()}-${Math.floor(Math.random() * 256)}`;
     const result = compiled({
       ...context.config.getData(transit.srcFilePath),
-      __file__: transit.srcFilePath,
+      __FILE__: transit.srcFilePath,
       __PATH__: path.relative(context.config.dist, transit.distFilePath ?? ""),
       __ROOT__: path.relative(transit.distFilePath ?? "", context.config.dist),
       __TIMESTAMP__: stamp,
