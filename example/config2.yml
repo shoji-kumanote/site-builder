@@ -1,9 +1,0 @@
-base: src
-dist: dist
-src: src/2
-vendor: "**/3rd-party/**/*"
-ignore:
-  - "**/*.min.js"
-  - "**/not-use/*"
-data:
-  baz: BAZ
