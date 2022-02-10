@@ -143,9 +143,21 @@ export const hbsTransform: Filter = async (transit, context) => {
   try {
     const hbs = await create(transit, context);
     const compiled = hbs.compile(transit.data);
+    const stamp = `${Date.now()}-${Math.floor(Math.random() * 256)}`;
     const result = compiled({
       ...context.config.getData(transit.srcFilePath),
       __file__: transit.srcFilePath,
+      __PATH__: path.relative(context.config.dist, transit.distFilePath ?? ""),
+      __ROOT__: path.relative(transit.distFilePath ?? "", context.config.dist),
+      __TIMESTAMP__: stamp,
+      __TIMESTAMP_QUERY__: `?${stamp}`,
+      ...(context.config.dev
+        ? {
+            __DEV__: true,
+            __DEV_TIMESTAMP__: stamp,
+            __DEV_TIMESTAMP_QUERY__: `?${stamp}`,
+          }
+        : {}),
     });
 
     context.dependency.commit();
