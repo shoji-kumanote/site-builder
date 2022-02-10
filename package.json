@@ -4,7 +4,8 @@
   "main": "lib/index",
   "types": "lib/type/index.d.ts",
   "license": "MIT",
-  "private": true,
+  "repository": "git@github.com:shoji-kumanote/site-builder.git",
+  "author": "shoji-kumanote <h-shoji@kumanote.info>",
   "scripts": {
     "build": "rollup -c rollup.config.js",
     "watch": "rollup -c rollup.config.js - w"
