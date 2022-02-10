@@ -50,6 +50,9 @@ export const FILTER_TYPES = {
 
   /** フィルタ種別: SVG 最適化 */
   svgOptimize: "svgOptimize",
+
+  /** フィルタ種別: コピー */
+  copy: "copy",
 } as const;
 
 /** タイプ: フィルタ種別 */

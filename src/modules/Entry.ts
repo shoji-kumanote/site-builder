@@ -223,14 +223,15 @@ export class Entry {
             ]
           : [];
 
-      // case ENTRY_TYPES.file: --> thru
+      // case ENTRY_TYPES.file: --> copy
 
       default:
-        return this.isFilterEnabled(FILTER_TYPES.thru)
+        return this.isFilterEnabled(FILTER_TYPES.copy)
           ? [
               {
-                filterType: FILTER_TYPES.thru,
+                filterType: FILTER_TYPES.copy,
                 distPath: this.entryPath,
+                binary: true,
               },
             ]
           : [];

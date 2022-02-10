@@ -60,6 +60,9 @@ export const getFilter = async (filterType: FilterType): Promise<Filter> => {
     case FILTER_TYPES.svgOptimize:
       return (await import("../filters/svgOptimize")).svgOptimize;
 
+    case FILTER_TYPES.copy:
+      return (await import("../filters/copy")).copy;
+
     default:
       return (await import("../filters/thru")).thru;
   }
