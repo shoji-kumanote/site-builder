@@ -24,6 +24,8 @@ export const ENTRY_TYPES = {
   sass: "sass",
   /** エントリ種別: hbs */
   hbs: "hbs",
+  /** エントリ種別: tpl */
+  tpl: "tpl",
   /** エントリ種別: html */
   html: "html",
   /** エントリ種別: js */
@@ -64,8 +66,10 @@ export const getEntryType = (vendor: string[], filePath: string): EntryType => {
       return lib ? ENTRY_TYPES.sassLib : ENTRY_TYPES.sass;
 
     case ".hbs":
-    case ".tpl":
       return lib ? ENTRY_TYPES.hbsLib : ENTRY_TYPES.hbs;
+
+    case ".tpl":
+      return lib ? ENTRY_TYPES.hbsLib : ENTRY_TYPES.tpl;
 
     case ".html":
       return lib ? ENTRY_TYPES.hbsLib : ENTRY_TYPES.html;

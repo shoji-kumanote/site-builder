@@ -5,40 +5,44 @@ import { WorkFlow } from "../types/WorkFlow";
  * CSS向けのワークフロー作成
  *
  * @param entryPath - エントリパス
- * @param optimize - optimize の要不要
- * @param minify - minify の要不要
- * @param format - format の要不要
+ * @param cssOptimize - cssOptimize フィルタの有無
+ * @param cssMinify - cssMinify フィルタの有無
+ * @param cssFormat - cssFormat フィルタの有無
+ * @param smarty - smarty フィルタの有無
  */
 export const getCssWorkFlows = (
   entryPath: string,
-  optimize: boolean,
-  minify: boolean,
-  format: boolean
+  cssOptimize: boolean,
+  cssMinify: boolean,
+  cssFormat: boolean,
+  smarty: boolean
 ): WorkFlow[] => {
-  if (optimize) {
-    if (minify) {
-      if (format) {
+  const origDistPath = entryPath.replace(/\.css$/, ".orig.css");
+
+  if (cssOptimize) {
+    if (cssMinify) {
+      if (cssFormat) {
         // all
         return [
           {
-            distPath: entryPath,
-            binary: false,
-            sourceMap: true,
             filterType: FILTER_TYPES.cssOptimize,
             next: [
               {
-                distPath: entryPath,
-                binary: false,
-                sourceMap: true,
                 filterType: FILTER_TYPES.cssMinify,
-                next: [],
+                distPath: entryPath,
+                sourceMap: true,
+                next: smarty
+                  ? [
+                      {
+                        filterType: FILTER_TYPES.smarty,
+                        distPath: `${entryPath}.data`,
+                      },
+                    ]
+                  : [],
               },
               {
-                distPath: entryPath.replace(/\.css$/, ".orig.css"),
-                binary: false,
-                sourceMap: false,
                 filterType: FILTER_TYPES.cssFormat,
-                next: [],
+                distPath: origDistPath,
               },
             ],
           },
@@ -48,38 +52,46 @@ export const getCssWorkFlows = (
       // optimize + minify
       return [
         {
-          distPath: entryPath,
-          binary: false,
-          sourceMap: true,
           filterType: FILTER_TYPES.cssOptimize,
+          distPath: origDistPath,
           next: [
             {
-              distPath: entryPath,
-              binary: false,
-              sourceMap: true,
               filterType: FILTER_TYPES.cssMinify,
-              next: [],
+              distPath: entryPath,
+              sourceMap: true,
+              next: smarty
+                ? [
+                    {
+                      filterType: FILTER_TYPES.smarty,
+                      distPath: `${entryPath}.data`,
+                    },
+                  ]
+                : [],
             },
           ],
         },
       ];
     }
 
-    if (format) {
+    if (cssFormat) {
       // optimize + format
       return [
         {
-          distPath: entryPath,
-          binary: false,
-          sourceMap: true,
           filterType: FILTER_TYPES.cssOptimize,
+          distPath: entryPath,
+          sourceMap: true,
           next: [
             {
-              distPath: entryPath,
-              binary: false,
-              sourceMap: true,
               filterType: FILTER_TYPES.cssFormat,
-              next: [],
+              distPath: origDistPath,
+              next: smarty
+                ? [
+                    {
+                      filterType: FILTER_TYPES.smarty,
+                      distPath: `${entryPath}.data`,
+                    },
+                  ]
+                : [],
             },
           ],
         },
@@ -89,32 +101,41 @@ export const getCssWorkFlows = (
     // optimize
     return [
       {
-        distPath: entryPath,
-        binary: false,
-        sourceMap: true,
         filterType: FILTER_TYPES.cssOptimize,
-        next: [],
+        distPath: entryPath,
+        sourceMap: true,
+        next: smarty
+          ? [
+              {
+                filterType: FILTER_TYPES.smarty,
+                distPath: `${entryPath}.data`,
+              },
+            ]
+          : [],
       },
     ];
   }
 
-  if (minify) {
-    if (format) {
+  if (cssMinify) {
+    if (cssFormat) {
       // minify + format
       return [
         {
-          distPath: entryPath,
-          binary: false,
-          sourceMap: true,
           filterType: FILTER_TYPES.cssMinify,
-          next: [],
+          distPath: entryPath,
+          sourceMap: true,
+          next: smarty
+            ? [
+                {
+                  filterType: FILTER_TYPES.smarty,
+                  distPath: `${entryPath}.data`,
+                },
+              ]
+            : [],
         },
         {
-          distPath: entryPath.replace(/\.css$/, ".orig.css"),
-          binary: false,
-          sourceMap: false,
           filterType: FILTER_TYPES.cssFormat,
-          next: [],
+          distPath: origDistPath,
         },
       ];
     }
@@ -122,36 +143,39 @@ export const getCssWorkFlows = (
     // minify
     return [
       {
-        distPath: entryPath,
-        binary: false,
-        sourceMap: true,
         filterType: FILTER_TYPES.cssMinify,
-        next: [],
+        distPath: entryPath,
+        sourceMap: true,
+        next: smarty
+          ? [
+              {
+                filterType: FILTER_TYPES.smarty,
+                distPath: `${entryPath}.data`,
+              },
+            ]
+          : [],
       },
     ];
   }
 
-  if (format) {
+  if (cssFormat) {
     // format
     return [
       {
-        distPath: entryPath,
-        binary: false,
-        sourceMap: true,
         filterType: FILTER_TYPES.cssFormat,
-        next: [],
+        distPath: entryPath,
+        next: smarty
+          ? [
+              {
+                filterType: FILTER_TYPES.smarty,
+                distPath: `${entryPath}.data`,
+              },
+            ]
+          : [],
       },
     ];
   }
 
-  // thru
-  return [
-    {
-      distPath: entryPath,
-      binary: false,
-      sourceMap: true,
-      filterType: FILTER_TYPES.thru,
-      next: [],
-    },
-  ];
+  // none
+  return [];
 };

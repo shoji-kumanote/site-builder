@@ -2,6 +2,7 @@ import path from "path";
 
 import { WorkFlow } from "../types/WorkFlow";
 import { getCssWorkFlows } from "../util/getCssWorkFlows";
+import { getHbsWorkFlows } from "../util/getHbsWorkFlows";
 import { getJsWorkFlows } from "../util/getJsWorkFlows";
 
 import { Config } from "./Config";
@@ -49,36 +50,33 @@ export class Entry {
 
     switch (this.entryType) {
       case ENTRY_TYPES.vendorCss:
-        workFlows.push({
-          distPath: this.entryPath,
-          binary: false,
-          sourceMap: false,
-          filterType: FILTER_TYPES.thru,
-          next: [],
-        });
+        if (this.isFilterEnabled(FILTER_TYPES.thru)) {
+          workFlows.push({
+            filterType: FILTER_TYPES.thru,
+            distPath: this.entryPath,
+          });
+        }
 
         if (this.isFilterEnabled(FILTER_TYPES.smarty)) {
           workFlows.push({
-            distPath: `${this.entryPath}.data`,
-            binary: false,
-            sourceMap: false,
             filterType: FILTER_TYPES.smarty,
-            next: [],
+            distPath: `${this.entryPath}.data`,
           });
         }
 
         return workFlows;
 
       case ENTRY_TYPES.vendorFile:
-        return [
-          {
-            distPath: this.entryPath,
-            binary: false,
-            sourceMap: false,
-            filterType: FILTER_TYPES.thru,
-            next: [],
-          },
-        ];
+        if (this.isFilterEnabled(FILTER_TYPES.thru)) {
+          return [
+            {
+              filterType: FILTER_TYPES.thru,
+              distPath: this.entryPath,
+            },
+          ];
+        }
+
+        return [];
 
       case ENTRY_TYPES.sassLib:
       case ENTRY_TYPES.hbsLib:
@@ -91,101 +89,50 @@ export class Entry {
           this.entryPath,
           this.isFilterEnabled(FILTER_TYPES.cssOptimize),
           this.isFilterEnabled(FILTER_TYPES.cssMinify),
-          this.isFilterEnabled(FILTER_TYPES.cssFormat)
+          this.isFilterEnabled(FILTER_TYPES.cssFormat),
+          this.isFilterEnabled(FILTER_TYPES.smarty)
         );
 
       case ENTRY_TYPES.sass:
-        if (this.isFilterEnabled(FILTER_TYPES.sassCompile)) {
-          return [
-            {
-              distPath: this.entryPath.replace(/\.(sass|scss)$/, ".css"),
-              binary: false,
-              sourceMap: true,
-              filterType: FILTER_TYPES.sassCompile,
-              next: getCssWorkFlows(
-                this.entryPath.replace(/\.(sass|scss)$/, ".css"),
-                this.isFilterEnabled(FILTER_TYPES.cssOptimize),
-                this.isFilterEnabled(FILTER_TYPES.cssMinify),
-                this.isFilterEnabled(FILTER_TYPES.cssFormat)
-              ),
-            },
-          ];
-        }
-
-        return getCssWorkFlows(
-          this.entryPath.replace(/\.(sass|scss)$/, ".css"),
-          this.isFilterEnabled(FILTER_TYPES.cssOptimize),
-          this.isFilterEnabled(FILTER_TYPES.cssMinify),
-          this.isFilterEnabled(FILTER_TYPES.cssFormat)
+        workFlows.push(
+          ...getCssWorkFlows(
+            this.entryPath.replace(/\.(sass|scss)$/, ".css"),
+            this.isFilterEnabled(FILTER_TYPES.cssOptimize),
+            this.isFilterEnabled(FILTER_TYPES.cssMinify),
+            this.isFilterEnabled(FILTER_TYPES.cssFormat),
+            this.isFilterEnabled(FILTER_TYPES.smarty)
+          )
         );
 
+        return this.isFilterEnabled(FILTER_TYPES.sassCompile)
+          ? [
+              {
+                filterType: FILTER_TYPES.sassCompile,
+                next: workFlows,
+              },
+            ]
+          : workFlows;
+
       case ENTRY_TYPES.hbs:
-        if (this.isFilterEnabled(FILTER_TYPES.hbsTransform)) {
-          return [
-            {
-              distPath: this.entryPath.replace(/\.(hbs|tpl)$/, ".html"),
-              binary: false,
-              sourceMap: false,
-              filterType: FILTER_TYPES.hbsTransform,
-              next: this.isFilterEnabled(FILTER_TYPES.htmlFormat)
-                ? [
-                    {
-                      distPath: this.entryPath.replace(/\.hbs$/, ".html"),
-                      binary: false,
-                      sourceMap: false,
-                      filterType: FILTER_TYPES.htmlFormat,
-                      next: [],
-                    },
-                  ]
-                : [],
-            },
-          ];
-        }
+        return getHbsWorkFlows(
+          this.entryPath.replace(/\.hbs$/, ".html"),
+          this.isFilterEnabled(FILTER_TYPES.hbsTransform),
+          this.isFilterEnabled(FILTER_TYPES.htmlFormat)
+        );
 
-        if (this.isFilterEnabled(FILTER_TYPES.htmlFormat)) {
-          return [
-            {
-              distPath: this.entryPath.replace(/\.(hbs|tpl)$/, ".html"),
-              binary: false,
-              sourceMap: false,
-              filterType: FILTER_TYPES.htmlFormat,
-              next: [],
-            },
-          ];
-        }
-
-        return [
-          {
-            distPath: this.entryPath.replace(/\.(hbs|tpl)$/, ".html"),
-            binary: false,
-            sourceMap: false,
-            filterType: FILTER_TYPES.thru,
-            next: [],
-          },
-        ];
+      case ENTRY_TYPES.tpl:
+        return getHbsWorkFlows(
+          this.entryPath,
+          this.isFilterEnabled(FILTER_TYPES.hbsTransform),
+          false
+        );
 
       case ENTRY_TYPES.html:
-        if (this.isFilterEnabled(FILTER_TYPES.htmlFormat)) {
-          return [
-            {
-              distPath: this.entryPath,
-              binary: false,
-              sourceMap: false,
-              filterType: FILTER_TYPES.htmlFormat,
-              next: [],
-            },
-          ];
-        }
-
-        return [
-          {
-            distPath: this.entryPath,
-            binary: false,
-            sourceMap: false,
-            filterType: FILTER_TYPES.thru,
-            next: [],
-          },
-        ];
+        return getHbsWorkFlows(
+          this.entryPath,
+          false,
+          this.isFilterEnabled(FILTER_TYPES.htmlFormat)
+        );
 
       case ENTRY_TYPES.js:
         return getJsWorkFlows(
@@ -196,119 +143,97 @@ export class Entry {
         );
 
       case ENTRY_TYPES.mjs:
-        if (this.isFilterEnabled(FILTER_TYPES.mjsBundle)) {
-          return [
-            {
-              distPath: this.entryPath.replace(/\.mjs$/, ".js"),
-              binary: false,
-              sourceMap: true,
-              filterType: FILTER_TYPES.mjsBundle,
-              next: getJsWorkFlows(
-                this.entryPath.replace(/\.mjs$/, ".js"),
-                this.isFilterEnabled(FILTER_TYPES.jsOptimize),
-                this.isFilterEnabled(FILTER_TYPES.jsMinify),
-                this.isFilterEnabled(FILTER_TYPES.jsFormat)
-              ),
-            },
-          ];
-        }
-
-        return getJsWorkFlows(
-          this.entryPath.replace(/\.mjs$/, ".js"),
-          this.isFilterEnabled(FILTER_TYPES.jsOptimize),
-          this.isFilterEnabled(FILTER_TYPES.jsMinify),
-          this.isFilterEnabled(FILTER_TYPES.jsFormat)
+        workFlows.push(
+          ...getJsWorkFlows(
+            this.entryPath.replace(/\.mjs$/, ".js"),
+            this.isFilterEnabled(FILTER_TYPES.jsOptimize),
+            this.isFilterEnabled(FILTER_TYPES.jsMinify),
+            this.isFilterEnabled(FILTER_TYPES.jsFormat)
+          )
         );
+
+        return this.isFilterEnabled(FILTER_TYPES.mjsBundle)
+          ? [
+              {
+                filterType: FILTER_TYPES.mjsBundle,
+                next: workFlows,
+              },
+            ]
+          : workFlows;
 
       case ENTRY_TYPES.ts:
-        if (this.isFilterEnabled(FILTER_TYPES.tsBundle)) {
-          return [
-            {
-              distPath: this.entryPath.replace(/\.ts$/, ".js"),
-              binary: false,
-              sourceMap: true,
-              filterType: FILTER_TYPES.tsBundle,
-              next: getJsWorkFlows(
-                this.entryPath.replace(/\.ts$/, ".js"),
-                this.isFilterEnabled(FILTER_TYPES.jsOptimize),
-                this.isFilterEnabled(FILTER_TYPES.jsMinify),
-                this.isFilterEnabled(FILTER_TYPES.jsFormat)
-              ),
-            },
-          ];
-        }
-
-        return getJsWorkFlows(
-          this.entryPath.replace(/\.ts$/, ".js"),
-          this.isFilterEnabled(FILTER_TYPES.jsOptimize),
-          this.isFilterEnabled(FILTER_TYPES.jsMinify),
-          this.isFilterEnabled(FILTER_TYPES.jsFormat)
+        workFlows.push(
+          ...getJsWorkFlows(
+            this.entryPath.replace(/\.ts$/, ".js"),
+            this.isFilterEnabled(FILTER_TYPES.jsOptimize),
+            this.isFilterEnabled(FILTER_TYPES.jsMinify),
+            this.isFilterEnabled(FILTER_TYPES.jsFormat)
+          )
         );
 
+        return this.isFilterEnabled(FILTER_TYPES.tsBundle)
+          ? [
+              {
+                filterType: FILTER_TYPES.tsBundle,
+                next: workFlows,
+              },
+            ]
+          : workFlows;
+
       case ENTRY_TYPES.jpeg:
-        return [
-          {
-            distPath: this.entryPath,
-            binary: true,
-            sourceMap: false,
-            filterType: this.isFilterEnabled(FILTER_TYPES.jpegOptimize)
-              ? FILTER_TYPES.jpegOptimize
-              : FILTER_TYPES.thru,
-            next: [],
-          },
-        ];
+        return this.isFilterEnabled(FILTER_TYPES.jpegOptimize)
+          ? [
+              {
+                filterType: FILTER_TYPES.jpegOptimize,
+                distPath: this.entryPath,
+                binary: true,
+              },
+            ]
+          : [];
 
       case ENTRY_TYPES.png:
-        return [
-          {
-            distPath: this.entryPath,
-            binary: true,
-            sourceMap: false,
-            filterType: this.isFilterEnabled(FILTER_TYPES.pngOptimize)
-              ? FILTER_TYPES.pngOptimize
-              : FILTER_TYPES.thru,
-            next: [],
-          },
-        ];
+        return this.isFilterEnabled(FILTER_TYPES.pngOptimize)
+          ? [
+              {
+                filterType: FILTER_TYPES.pngOptimize,
+                distPath: this.entryPath,
+                binary: true,
+              },
+            ]
+          : [];
 
       case ENTRY_TYPES.gif:
-        return [
-          {
-            distPath: this.entryPath,
-            binary: true,
-            sourceMap: false,
-            filterType: this.isFilterEnabled(FILTER_TYPES.gifOptimize)
-              ? FILTER_TYPES.gifOptimize
-              : FILTER_TYPES.thru,
-            next: [],
-          },
-        ];
+        return this.isFilterEnabled(FILTER_TYPES.gifOptimize)
+          ? [
+              {
+                filterType: FILTER_TYPES.gifOptimize,
+                distPath: this.entryPath,
+                binary: true,
+              },
+            ]
+          : [];
 
       case ENTRY_TYPES.svg:
-        return [
-          {
-            distPath: this.entryPath,
-            binary: false,
-            sourceMap: false,
-            filterType: this.isFilterEnabled(FILTER_TYPES.svgOptimize)
-              ? FILTER_TYPES.svgOptimize
-              : FILTER_TYPES.thru,
-            next: [],
-          },
-        ];
+        return this.isFilterEnabled(FILTER_TYPES.svgOptimize)
+          ? [
+              {
+                filterType: FILTER_TYPES.svgOptimize,
+                distPath: this.entryPath,
+              },
+            ]
+          : [];
 
       // case ENTRY_TYPES.file: --> thru
 
       default:
-        return [
-          {
-            distPath: this.entryPath,
-            binary: false,
-            sourceMap: false,
-            filterType: FILTER_TYPES.thru,
-            next: [],
-          },
-        ];
+        return this.isFilterEnabled(FILTER_TYPES.thru)
+          ? [
+              {
+                filterType: FILTER_TYPES.thru,
+                distPath: this.entryPath,
+              },
+            ]
+          : [];
     }
   }
 
@@ -319,12 +244,12 @@ export class Entry {
 
     const walk = (workFlowList: WorkFlow[]): void => {
       for (const workFlow of workFlowList) {
-        if (workFlow.next.length === 0) {
+        if (workFlow.distPath !== undefined) {
           (workFlow.sourceMap ? distPaths1 : distPaths2).push(
             workFlow.distPath
           );
         } else {
-          walk(workFlow.next);
+          walk(workFlow.next ?? []);
         }
       }
     };
@@ -346,14 +271,14 @@ export class Entry {
 
     const walk = (workFlowList: WorkFlow[]): void => {
       for (const workFlow of workFlowList) {
-        if (workFlow.next.length === 0) {
+        if (workFlow.distPath !== undefined) {
           distPaths.push(workFlow.distPath);
 
           if (includeSourceMap && workFlow.sourceMap) {
             distPaths.push(`${workFlow.distPath}.map`);
           }
         } else {
-          walk(workFlow.next);
+          walk(workFlow.next ?? []);
         }
       }
     };

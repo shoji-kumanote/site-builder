@@ -21,6 +21,7 @@ export const info: Command = async (context) => {
     src: config.src,
     vendor: config.vendor,
     ignore: config.ignore,
+    disabled: config.disabled,
   });
 
   logger.banner("page data");
@@ -31,18 +32,19 @@ export const info: Command = async (context) => {
   const entries = await context.getEntries();
 
   const showWorkFlowInfo = (workFlow: WorkFlow): void => {
-    if (workFlow.next.length > 0) {
-      logger.filterType(workFlow.filterType);
-      for (const x of workFlow.next) {
+    const next = workFlow.next ?? [];
+
+    logger.filterType(
+      workFlow.filterType,
+      workFlow.distPath,
+      workFlow.sourceMap
+    );
+
+    if (next.length > 0) {
+      for (const x of next) {
         logger.begin();
         showWorkFlowInfo(x);
         logger.end();
-      }
-    } else {
-      logger.filterType(workFlow.filterType, workFlow.distPath);
-
-      if (workFlow.sourceMap) {
-        logger.filterType(workFlow.filterType, `${workFlow.distPath}.map`);
       }
     }
   };

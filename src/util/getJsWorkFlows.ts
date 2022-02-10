@@ -5,40 +5,34 @@ import { WorkFlow } from "../types/WorkFlow";
  * JavaScript向けのワークフロー作成
  *
  * @param entryPath - エントリパス
- * @param optimize - optimize の要不要
- * @param minify - minify の要不要
- * @param format - format の要不要
+ * @param jsOptimize - jsOptimize フィルタの有無
+ * @param jsMinify - jsMinify フィルタの有無
+ * @param jsFormat - jsFormat フィルタの有無
  */
 export const getJsWorkFlows = (
   entryPath: string,
-  optimize: boolean,
-  minify: boolean,
-  format: boolean
+  jsOptimize: boolean,
+  jsMinify: boolean,
+  jsFormat: boolean
 ): WorkFlow[] => {
-  if (optimize) {
-    if (minify) {
-      if (format) {
+  const origDistPath = entryPath.replace(/\.js$/, ".orig.js");
+
+  if (jsOptimize) {
+    if (jsMinify) {
+      if (jsFormat) {
         // all
         return [
           {
-            distPath: entryPath,
-            binary: false,
-            sourceMap: true,
             filterType: FILTER_TYPES.jsOptimize,
             next: [
               {
-                distPath: entryPath,
-                binary: false,
-                sourceMap: true,
                 filterType: FILTER_TYPES.jsMinify,
-                next: [],
+                distPath: entryPath,
+                sourceMap: true,
               },
               {
-                distPath: entryPath.replace(/\.js$/, ".orig.js"),
-                binary: false,
-                sourceMap: false,
                 filterType: FILTER_TYPES.jsFormat,
-                next: [],
+                distPath: origDistPath,
               },
             ],
           },
@@ -48,38 +42,29 @@ export const getJsWorkFlows = (
       // optimize + minify
       return [
         {
-          distPath: entryPath,
-          binary: false,
-          sourceMap: true,
           filterType: FILTER_TYPES.jsOptimize,
           next: [
             {
-              distPath: entryPath,
-              binary: false,
-              sourceMap: true,
               filterType: FILTER_TYPES.jsMinify,
-              next: [],
+              distPath: entryPath,
+              sourceMap: true,
             },
           ],
         },
       ];
     }
 
-    if (format) {
+    if (jsFormat) {
       // optimize + format
       return [
         {
-          distPath: entryPath,
-          binary: false,
-          sourceMap: true,
           filterType: FILTER_TYPES.jsOptimize,
+          distPath: entryPath,
+          sourceMap: true,
           next: [
             {
-              distPath: entryPath,
-              binary: false,
-              sourceMap: true,
               filterType: FILTER_TYPES.jsFormat,
-              next: [],
+              distPath: origDistPath,
             },
           ],
         },
@@ -90,31 +75,24 @@ export const getJsWorkFlows = (
     return [
       {
         distPath: entryPath,
-        binary: false,
-        sourceMap: true,
         filterType: FILTER_TYPES.jsOptimize,
-        next: [],
+        sourceMap: true,
       },
     ];
   }
 
-  if (minify) {
-    if (format) {
+  if (jsMinify) {
+    if (jsFormat) {
       // minify + format
       return [
         {
-          distPath: entryPath,
-          binary: false,
-          sourceMap: true,
           filterType: FILTER_TYPES.jsMinify,
-          next: [],
+          distPath: entryPath,
+          sourceMap: true,
         },
         {
-          distPath: entryPath.replace(/\.js$/, ".orig.js"),
-          binary: false,
-          sourceMap: false,
           filterType: FILTER_TYPES.jsFormat,
-          next: [],
+          distPath: origDistPath,
         },
       ];
     }
@@ -122,36 +100,23 @@ export const getJsWorkFlows = (
     // minify
     return [
       {
-        distPath: entryPath,
-        binary: false,
-        sourceMap: true,
         filterType: FILTER_TYPES.jsMinify,
-        next: [],
+        distPath: entryPath,
+        sourceMap: true,
       },
     ];
   }
 
-  if (format) {
+  if (jsFormat) {
     // format
     return [
       {
-        distPath: entryPath,
-        binary: false,
-        sourceMap: true,
         filterType: FILTER_TYPES.jsFormat,
-        next: [],
+        distPath: entryPath,
       },
     ];
   }
 
-  // thru
-  return [
-    {
-      distPath: entryPath,
-      binary: false,
-      sourceMap: true,
-      filterType: FILTER_TYPES.thru,
-      next: [],
-    },
-  ];
+  // none
+  return [];
 };

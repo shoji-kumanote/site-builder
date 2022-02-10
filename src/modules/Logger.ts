@@ -272,7 +272,11 @@ export class Logger {
    * @param filterType - フィルタ種別
    * @param distPath - 出力ファイルパス
    */
-  filterType(filterType: FilterType, distPath?: string): void {
+  filterType(
+    filterType: FilterType,
+    distPath?: string,
+    sourceMap?: boolean
+  ): void {
     if (distPath === undefined) {
       this.info(applyColor(filterType, "yellow"));
     } else {
@@ -281,6 +285,14 @@ export class Logger {
         "-->",
         applyColor(distPath, "magenta")
       );
+
+      if (sourceMap) {
+        this.info(
+          applyColor(filterType, "hidden"),
+          applyColor("-->", "dim"),
+          applyColor(`${distPath}.map`, "magenta")
+        );
+      }
     }
   }
 }

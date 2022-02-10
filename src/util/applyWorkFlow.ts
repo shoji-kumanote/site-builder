@@ -34,7 +34,7 @@ export const applyWorkFlow = async (
     } else {
       const result = await filter(transit, context);
 
-      if (workFlow.next.length === 0) {
+      if (workFlow.distPath !== undefined) {
         // ここで出力
         context.logger.begin();
 
@@ -58,11 +58,10 @@ export const applyWorkFlow = async (
         }
         context.logger.end();
         context.logger.info();
-      } else {
-        for (const next of workFlow.next) {
-          /* eslint-disable no-await-in-loop */
-          await applyWorkFlow(next, result, context);
-        }
+      }
+      for (const next of workFlow.next ?? []) {
+        /* eslint-disable no-await-in-loop */
+        await applyWorkFlow(next, result, context);
       }
     }
   } catch (e) {
