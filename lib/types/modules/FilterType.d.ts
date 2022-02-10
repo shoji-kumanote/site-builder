@@ -34,6 +34,8 @@ export declare const FILTER_TYPES: {
     readonly gifOptimize: "gifOptimize";
     /** フィルタ種別: SVG 最適化 */
     readonly svgOptimize: "svgOptimize";
+    /** フィルタ種別: コピー */
+    readonly copy: "copy";
 };
 /** タイプ: フィルタ種別 */
 export declare type FilterType = typeof FILTER_TYPES[keyof typeof FILTER_TYPES];
