@@ -1,4 +1,5 @@
 import fs from "fs";
+import path from "path";
 
 import jsYaml from "js-yaml";
 
@@ -6,7 +7,7 @@ import { PageData } from "../types/PageData";
 import { getStringArray } from "../util/getStringArray";
 import { mergeArray } from "../util/mergeArray";
 
-import { FilterType, FILTER_TYPES, getFilterType } from "./FilterType";
+import { FilterType, getFilterType } from "./FilterType";
 
 /** タイプ: 設定ファイルデータ */
 export type ConfigFileData = {
@@ -55,6 +56,7 @@ export const loadConfigFile = async (
   filePath: string
 ): Promise<ConfigFileData> => {
   const configFileData = await load(filePath);
+  const configBaseDir = path.dirname(filePath);
 
   if (typeof configFileData !== "object" || configFileData === null) {
     throw new Error("設定ファイルの形式が正しくありません");
@@ -78,31 +80,40 @@ export const loadConfigFile = async (
     }
   }
 
-  let disabled: string[] = [];
+  const disabled: FilterType[] = [];
 
   if ("disabled" in configFileData) {
     try {
-      disabled = getStringArray(configFileData.disabled, true);
+      for (const x of getStringArray(configFileData.disabled, true)) {
+        try {
+          disabled.push(getFilterType(x));
+        } catch {
+          throw new Error(
+            `設定ファイルの disabled に不明なフィルタ種別: ${x} が指定されています`
+          );
+        }
+      }
     } catch (e) {
       throw new Error(
         `設定ファイルの disabled が文字列または文字列の配列ではありません`
       );
     }
-    for (const filterType of disabled) {
-      if (!(filterType in FILTER_TYPES)) {
-        throw new Error(
-          `設定ファイルの disabled に不明なフィルタ種別: ${filterType} が指定されています`
-        );
-      }
-    }
   }
 
   return {
-    ...configFileData,
-    src: getStringArray(configFileData.src),
-    vendor: getStringArray(configFileData.vendor),
-    ignore: getStringArray(configFileData.ignore),
+    base: path.resolve(configBaseDir, configFileData.base),
+    dist: path.resolve(configBaseDir, configFileData.dist),
+    src: getStringArray(configFileData.src).map((x) =>
+      path.resolve(configBaseDir, x)
+    ),
+    vendor: getStringArray(configFileData.vendor).map((x) =>
+      path.resolve(configBaseDir, x)
+    ),
+    ignore: getStringArray(configFileData.ignore).map((x) =>
+      path.resolve(configBaseDir, x)
+    ),
     disabled,
+    data: configFileData.data,
   };
 };
 

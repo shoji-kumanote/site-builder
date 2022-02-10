@@ -59,11 +59,11 @@ export class Config implements ConfigData {
     this.dryRun = data.dryRun;
     this.dev = data.dev;
 
-    this.base = path.resolve(data.base);
-    this.dist = path.resolve(data.dist);
-    this.#src = data.src.map((x) => path.resolve(x));
-    this.#vendor = data.vendor.map((x) => path.resolve(x));
-    this.#ignore = data.ignore.map((x) => path.resolve(x));
+    this.base = data.base;
+    this.dist = data.dist;
+    this.#src = data.src;
+    this.#vendor = data.vendor;
+    this.#ignore = data.ignore;
     this.#disabled = data.disabled;
 
     this.#pageData = pageData;
