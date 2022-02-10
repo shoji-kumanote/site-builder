@@ -1,8 +1,7 @@
 import typescript from "@rollup/plugin-typescript";
 import externals from "rollup-plugin-node-externals";
 
-const config = {
-  input: "./src/index.ts",
+export default {
   plugins: [
     externals({
       builtins: true,
@@ -11,23 +10,10 @@ const config = {
     }),
     typescript({ tsconfig: "./tsconfig.json" }),
   ],
+  input: "./src/index.ts",
+  output: {
+    file: "./lib/index.mjs",
+    format: "es",
+    inlineDynamicImports: true,
+  },
 };
-
-export default [
-  {
-    ...config,
-    output: {
-      file: "./lib/index.js",
-      format: "cjs",
-      inlineDynamicImports: true,
-    },
-  },
-  {
-    ...config,
-    output: {
-      file: "./lib/index.mjs",
-      format: "es",
-      inlineDynamicImports: true,
-    },
-  },
-];
