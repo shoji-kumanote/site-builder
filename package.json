@@ -8,7 +8,7 @@
   "author": "shoji-kumanote <h-shoji@kumanote.info>",
   "scripts": {
     "build": "rollup -c rollup.config.js",
-    "watch": "rollup -c rollup.config.js - w"
+    "watch": "rollup -c rollup.config.js -w"
   },
   "dependencies": {
     "@babel/core": "^7.17.0",
