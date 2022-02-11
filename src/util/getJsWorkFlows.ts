@@ -59,12 +59,10 @@ export const getJsWorkFlows = (
       return [
         {
           filterType: FILTER_TYPES.jsOptimize,
-          distPath: entryPath,
-          sourceMap: true,
           next: [
             {
               filterType: FILTER_TYPES.jsFormat,
-              distPath: origDistPath,
+              distPath: entryPath,
             },
           ],
         },

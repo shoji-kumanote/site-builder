@@ -78,12 +78,10 @@ export const getCssWorkFlows = (
       return [
         {
           filterType: FILTER_TYPES.cssOptimize,
-          distPath: entryPath,
-          sourceMap: true,
           next: [
             {
               filterType: FILTER_TYPES.cssFormat,
-              distPath: origDistPath,
+              distPath: entryPath,
               next: smarty
                 ? [
                     {
