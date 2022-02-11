@@ -942,7 +942,7 @@
     "@jridgewell/resolve-uri" "^3.0.3"
     "@jridgewell/sourcemap-codec" "^1.4.10"
 
-"@kumanote/eslint-config@git+https://github.com/shoji-kumanote/eslint-config.git":
+"@kumanote/eslint-config@git+https://github.com/shoji-kumanote/eslint-config.git#v1.0.1":
   version "1.0.1"
   resolved "git+https://github.com/shoji-kumanote/eslint-config.git#ec3668442e999576970af5d277c61c17df3a9f0d"
 
