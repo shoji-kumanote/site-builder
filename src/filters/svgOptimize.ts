@@ -8,11 +8,11 @@ const removeViewBox: RemoveViewBoxPlugin = {
   active: false,
 };
 
-/** id属性やdata-*属性を削除する設定 */
+/** data-*属性を削除する設定 */
 const removeAttrs: RemoveAttrsPlugin = {
   name: "removeAttrs",
   params: {
-    attrs: ["data-.*", "id"],
+    attrs: ["data-.*"],
   },
 };
 
