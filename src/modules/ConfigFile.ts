@@ -29,6 +29,9 @@ export type ConfigFileData = {
   /** 無効フィルタ */
   readonly disabled: FilterType[];
 
+  /** externalモジュール */
+  readonly externalModules: string[];
+
   /** ページデータ */
   readonly data: PageData;
 };
@@ -68,7 +71,7 @@ export const loadConfigFile = async (
     }
   }
 
-  for (const key of ["src", "vendor", "ignore"]) {
+  for (const key of ["src", "vendor", "ignore", "externalModules"]) {
     if (key in configFileData) {
       try {
         getStringArray(configFileData[key], true);
@@ -120,6 +123,7 @@ export const loadConfigFile = async (
     ignore: getStringArray(configFileData.ignore).map((x) =>
       path.resolve(configBaseDir, x)
     ),
+    externalModules: getStringArray(configFileData.externalModules),
     disabled,
     data: configFileData.data ?? {},
   };
@@ -159,6 +163,7 @@ export const mergeConfigFile = (...args: ConfigFileData[]): ConfigFileData => {
         getStringArray(a.disabled).map(getFilterType),
         getStringArray(b.disabled).map(getFilterType)
       ),
+      externalModules: mergeArray(a.externalModules, b.externalModules),
       data: { ...a.data, ...b.data },
     },
     ...args.slice(2)

@@ -17,6 +17,7 @@ export class Config implements ConfigData {
   #vendor: string[];
   #ignore: string[];
   #disabled: FilterType[];
+  #externalModules: string[];
 
   readonly dryRun: boolean;
   readonly dev: boolean;
@@ -65,6 +66,7 @@ export class Config implements ConfigData {
     this.#vendor = data.vendor;
     this.#ignore = data.ignore;
     this.#disabled = data.disabled;
+    this.#externalModules = data.externalModules;
 
     this.#pageData = pageData;
   }
@@ -87,6 +89,10 @@ export class Config implements ConfigData {
 
   get disabled(): FilterType[] {
     return [...this.#disabled];
+  }
+
+  get externalModules(): string[] {
+    return [...this.#externalModules];
   }
 
   /**

@@ -13,6 +13,7 @@ export const mjsBundle: Filter = async (transit, context) => {
     write: false,
     outdir: "out",
     metafile: true,
+    external: context.config.externalModules,
   });
 
   const [data, sourceMap, deps] = getEsBuildResult(result, context.config.base);
