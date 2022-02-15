@@ -14,5 +14,5 @@ export const build: Command = async (context) => {
     await buildEntry(context, entry);
   }
 
-  context.dependency.dump(context.logger);
+  // context.dependency.dump(context.logger);
 };
