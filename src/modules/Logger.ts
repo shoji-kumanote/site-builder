@@ -262,7 +262,10 @@ export class Logger {
   entry(entry: Entry, ...colors: LoggerColor[]): void {
     this.info(
       applyColor("*", "dim"),
-      applyColor(entry.entryPath, colors.length === 0 ? "green" : colors)
+      applyColor(
+        `${entry.entryPath} [${entry.entryType}]`,
+        colors.length === 0 ? "green" : colors
+      )
     );
   }
 
