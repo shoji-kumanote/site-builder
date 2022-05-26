@@ -23,6 +23,7 @@ export declare class Config implements ConfigData {
     get vendor(): string[];
     get ignore(): string[];
     get disabled(): FilterType[];
+    get externalModules(): string[];
     /**
      * ページデータ取得
      *

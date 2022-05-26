@@ -14,6 +14,8 @@ export declare type ConfigFileData = {
     readonly ignore: string[];
     /** 無効フィルタ */
     readonly disabled: FilterType[];
+    /** externalモジュール */
+    readonly externalModules: string[];
     /** ページデータ */
     readonly data: PageData;
 };
