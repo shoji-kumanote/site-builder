@@ -1,6 +1,8 @@
 import fs from "fs";
 import path from "path";
 
+import imageSize from "image-size";
+
 import { Context } from "../modules/Context";
 import { Transit } from "../modules/Transit";
 import { Filter } from "../types/Filter";
@@ -109,6 +111,24 @@ const create = async (
 
   const hbs = handlebars.default.create();
 
+  const imageSrcSize = (
+    file: string,
+    hbsContext: HbsContext,
+    srcAttr: string
+  ): string => {
+    // eslint-disable-next-line no-underscore-dangle
+    const baseFilePath = hbsContext.data.root.__FILE__;
+    const filePath = getFilePath(
+      context.config.base,
+      path.dirname(baseFilePath),
+      file
+    );
+
+    const { width, height } = imageSize(fs.readFileSync(filePath));
+
+    return `${srcAttr}="${file}" width="${width}" height="${height}"`;
+  };
+
   const apply = (
     file: string,
     currentData: HbsData,
@@ -166,6 +186,18 @@ const create = async (
     function insertHelper(this: HbsData, file, hbsContext) {
       return new handlebars.default.SafeString(
         apply(hbs.compile(file)(this), this, hbsContext, false)
+      );
+    }
+  );
+
+  hbs.registerHelper(
+    "image",
+    function imgHelper(this: HbsData, file, arg1, arg2) {
+      const attrName = typeof arg2 !== "undefined" ? arg1 : "src";
+      const hbsContext = arg2 ?? arg1;
+
+      return new handlebars.default.SafeString(
+        imageSrcSize(hbs.compile(file)(this), hbsContext, attrName)
       );
     }
   );
