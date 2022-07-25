@@ -19,15 +19,43 @@ type HbsContext = {
 };
 
 /**
- * includeするファイルの特定
+ * ファイルの特定
  *
  * @param baseDir - ベースディレクトリ
+ * @param includeTargetDir - include元のファイルのあるディレクトリ
  * @param file - ファイルの記述
  * @returns ファイルパス
  * @throws ファイルがない場合
  */
-const findFile = (baseDir: string, file: string): string => {
-  const filePath = path.resolve(baseDir, file);
+const getFilePath = (
+  baseDir: string,
+  includeTargetDir: string,
+  file: string
+): string => {
+  // 先頭が '/' ならベースディレクトリからの相対に変更
+  // そうでなければinclude元のファイルのあるディレクトリからの相対
+  const filePath = /^\//.test(file)
+    ? path.resolve(baseDir, file.replace(/^\/+/, ""))
+    : path.resolve(includeTargetDir, file);
+
+  return filePath;
+};
+
+/**
+ * includeするファイルの特定
+ *
+ * @param baseDir - ベースディレクトリ
+ * @param includeTargetDir - include元のファイルのあるディレクトリ
+ * @param file - ファイルの記述
+ * @returns ファイルパス
+ * @throws ファイルがない場合
+ */
+const findFile = (
+  baseDir: string,
+  includeTargetDir: string,
+  file: string
+): string => {
+  const filePath = getFilePath(baseDir, includeTargetDir, file);
   const dirName = path.dirname(filePath);
   const baseName = path.basename(filePath);
   const targets: string[] = [filePath];
@@ -89,7 +117,11 @@ const create = async (
   ): string => {
     // eslint-disable-next-line no-underscore-dangle
     const baseFilePath = hbsContext.data.root.__FILE__;
-    const includeFilePath = findFile(path.dirname(baseFilePath), file);
+    const includeFilePath = findFile(
+      context.config.base,
+      path.dirname(baseFilePath),
+      file
+    );
 
     context.dependency.add(transit.srcFilePath, includeFilePath);
 
@@ -109,7 +141,7 @@ const create = async (
     "_",
     function includeHelper(this: HbsData, file, hbsContext) {
       return new handlebars.default.SafeString(
-        apply(file, this, hbsContext, true)
+        apply(hbs.compile(file)(this), this, hbsContext, true)
       );
     }
   );
@@ -117,7 +149,7 @@ const create = async (
     "include",
     function includeHelper(this: HbsData, file, hbsContext) {
       return new handlebars.default.SafeString(
-        apply(file, this, hbsContext, true)
+        apply(hbs.compile(file)(this), this, hbsContext, true)
       );
     }
   );
@@ -125,7 +157,7 @@ const create = async (
     "$",
     function insertHelper(this: HbsData, file, hbsContext) {
       return new handlebars.default.SafeString(
-        apply(file, this, hbsContext, false)
+        apply(hbs.compile(file)(this), this, hbsContext, false)
       );
     }
   );
@@ -133,7 +165,7 @@ const create = async (
     "insert",
     function insertHelper(this: HbsData, file, hbsContext) {
       return new handlebars.default.SafeString(
-        apply(file, this, hbsContext, false)
+        apply(hbs.compile(file)(this), this, hbsContext, false)
       );
     }
   );
