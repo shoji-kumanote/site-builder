@@ -59,9 +59,11 @@ export class Context {
       { onlyFiles: true }
     );
 
-    console.debug(this.config.src);
-
-    return filePaths.map((x) => new Entry(this.#config, x));
+    return (
+      path.win32 === path
+        ? filePaths.map((x) => x.split("/").join(path.sep))
+        : filePaths
+    ).map((x) => new Entry(this.#config, x));
   }
 
   /** 指定ファイルのエントリ取得 */
