@@ -113,6 +113,13 @@ export class Entry {
             ]
           : workFlows;
 
+      case ENTRY_TYPES.php:
+        return getHbsWorkFlows(
+          this.entryPath.replace(/\.php.hbs$/, ".php"),
+          this.isFilterEnabled(FILTER_TYPES.hbsTransform),
+          false
+        );
+
       case ENTRY_TYPES.hbs:
         return getHbsWorkFlows(
           this.entryPath.replace(/\.hbs$/, ".html"),

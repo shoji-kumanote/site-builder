@@ -95,6 +95,7 @@ vendor 判定もライブラリ判定もされなかった場合は以下のよ�
 | ------------- | ---- |
 | .css          | css  |
 | .sass / .scss | sass |
+| .php.hbs      | php  |
 | .hbs / .tpl   | hbs  |
 | .html         | html |
 | .js           | js   |
@@ -187,6 +188,15 @@ info コマンドの出力で、どのような処理が行われるかを確認
 - sassCompile フィルタが無効の場合は、そのまま css のフィルタ適用となります。
   - たいていの場合は構文エラーとなります。
 - 拡張子が .sass の場合は indented スタイルとみなされます。
+
+#### php
+
+元ファイル名: foo.php.hbs
+
+| 1: hbsTransform | foo.php |
+| :-------------: | :-----: |
+|        o        |    1    |
+|        x        |  なし   |
 
 #### hbs
 
