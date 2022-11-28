@@ -14,7 +14,11 @@ export const sassCompile: Filter = async (transit, context) => {
 
   context.dependency.add(
     transit.srcFilePath,
-    ...result.loadedUrls.map((x) => x.pathname)
+    ...result.loadedUrls.map((x) =>
+      path.win32 === path
+        ? x.pathname.replace(/^\/+/, "").split("/").join(path.sep)
+        : x.pathname
+    )
   );
 
   const next = transit.update(

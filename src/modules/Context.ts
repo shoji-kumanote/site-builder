@@ -1,3 +1,5 @@
+import path from "path";
+
 import { globby } from "globby";
 import micromatch from "micromatch";
 
@@ -46,12 +48,22 @@ export class Context {
 
   /** 全ソースファイルのエントリ取得 */
   async getEntries(): Promise<Entry[]> {
+    const patterns = [
+      ...this.config.src,
+      ...this.config.ignore.map((x) => `!${x}`),
+    ];
     const filePaths = await globby(
-      [...this.config.src, ...this.config.ignore.map((x) => `!${x}`)],
+      path === path.win32
+        ? patterns.map((x) => x.split(path.sep).join("/"))
+        : patterns,
       { onlyFiles: true }
     );
 
-    return filePaths.map((x) => new Entry(this.#config, x));
+    return (
+      path.win32 === path
+        ? filePaths.map((x) => x.split("/").join(path.sep))
+        : filePaths
+    ).map((x) => new Entry(this.#config, x));
   }
 
   /** 指定ファイルのエントリ取得 */
