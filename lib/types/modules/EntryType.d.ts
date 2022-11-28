@@ -16,6 +16,8 @@ export declare const ENTRY_TYPES: {
     readonly css: "css";
     /** エントリ種別: sass */
     readonly sass: "sass";
+    /** エントリ種別: php */
+    readonly php: "php";
     /** エントリ種別: hbs */
     readonly hbs: "hbs";
     /** エントリ種別: tpl */

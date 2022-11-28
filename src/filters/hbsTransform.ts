@@ -62,6 +62,10 @@ const findFile = (
   const baseName = path.basename(filePath);
   const targets: string[] = [filePath];
 
+  if (!/\.php.hbs$/.test(baseName)) {
+    targets.push(path.resolve(dirName, `_${baseName}.php`));
+  }
+
   if (!/\.hbs$/.test(baseName)) {
     targets.push(`${filePath}.hbs`);
   }

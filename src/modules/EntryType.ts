@@ -22,6 +22,8 @@ export const ENTRY_TYPES = {
   css: "css",
   /** エントリ種別: sass */
   sass: "sass",
+  /** エントリ種別: php */
+  php: "php",
   /** エントリ種別: hbs */
   hbs: "hbs",
   /** エントリ種別: tpl */
@@ -66,6 +68,10 @@ export const getEntryType = (vendor: string[], filePath: string): EntryType => {
       return lib ? ENTRY_TYPES.sassLib : ENTRY_TYPES.sass;
 
     case ".hbs":
+      if (filePath.endsWith(".php.hbs")) {
+        return ENTRY_TYPES.php;
+      }
+
       return lib ? ENTRY_TYPES.hbsLib : ENTRY_TYPES.hbs;
 
     case ".tpl":
