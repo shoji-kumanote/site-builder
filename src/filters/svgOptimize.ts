@@ -8,15 +8,15 @@ const removeViewBox: RemoveViewBoxPlugin = {
   active: false,
 };
 
-/** data-*属性を削除する設定 */
+/** id属性・data-*属性を削除する設定 */
 const removeAttrs: RemoveAttrsPlugin = {
   name: "removeAttrs",
   params: {
-    attrs: ["data-.*"],
+    attrs: ["data-.*", "id"],
   },
 };
 
-/** svgoの最適化競って */
+/** svgoの最適化設定 */
 const options: OptimizeOptions = {
   plugins: [removeViewBox, removeAttrs],
 };
